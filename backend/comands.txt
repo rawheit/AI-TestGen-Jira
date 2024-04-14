@@ -1,0 +1,4 @@
+flask --app app run -- run server
+.\env\Scripts\activate -- activate venv
+pip freeze > requirements.txt -- to add packages to req file
+flask --app app run --debug -- run in debug mode

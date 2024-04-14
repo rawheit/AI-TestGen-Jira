@@ -1,0 +1,24 @@
+.button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 35px;
+}
+
+.button-container .button {
+  width: 12vw;
+  height: auto;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Aligns items to the start of the flex container */
+}
+
+.form-control,
+.form-group > .button {
+  width: 100%; /* Makes input and button fill the container */
+  box-sizing: border-box; /* Ensures padding and border are included in the width */
+  margin-bottom: 10px; /* Adds space below the input */
+}

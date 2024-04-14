@@ -1,0 +1,29 @@
+.blank-layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  padding-top: 50px;
+}
+
+.main-content {
+    width: 75%; /* 50% of the viewport width /
+    height: 70vh; / same as width to make it square */
+    margin: auto;
+    box-sizing: border-box;
+    padding: 20px;
+    border-radius: 15px
+}
+
+.navbar {
+    font-size: 20px;
+}
+
+.green-icon {
+  color: rgb(0, 206, 0);
+}
+
+.logo {
+  width: 150px;
+}

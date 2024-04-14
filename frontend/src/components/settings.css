@@ -1,0 +1,42 @@
+.settings .ml-5 {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Add space between columns */
+.settings .row > .col {
+  padding-left: 100px;
+  padding-right: 120px;
+}
+
+.settings .row > .col:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: #7a7a7a;
+}
+
+.settings .row {
+  position: relative;
+}
+
+.settings .col {
+  position: relative;
+}
+
+.settings {
+	width: 100vw;
+}
+
+.settings .container {
+	width: 100vw; 
+	max-width: fit-content;
+}
+
+.datapresent-text {
+	color: green;
+}
