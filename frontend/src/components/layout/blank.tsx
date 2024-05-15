@@ -22,37 +22,36 @@ const getTooltipMessage = () => {
 };
 
 const BlankLayout: React.FC<BlankLayoutProps> = ({ children }) => {
+
   return (
     <div className="blank-layout">
-      <img src="/logo.webp" alt="Logo for Litera" />
-      <div className="header-container">
+      <Navbar bg="white" expand="lg" className="custom-navbar">
+        {/* Logo on the left */}
+        <Navbar.Brand href="/">
+          <img src="/logo.webp" alt="Logo for Litera" className="navbar-logo" />
+        </Navbar.Brand>
+
         {/* Center - navbar icons */}
-        <div className="navbar-center">
-          <Navbar>
-            <Nav>
-              <Nav.Link href="/">
-                <i className="fa-solid fa-house"></i>
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="ml-auto mr-auto">
+            <Nav.Link href="/">
+              <i className="fa-solid fa-house"></i>
+            </Nav.Link>
+            <OverlayTrigger
+              placement="top"
+              overlay={<Tooltip id="tooltip-settings">{getTooltipMessage()}</Tooltip>}
+            >
+              <Nav.Link href="/settings">
+                <i
+                  className={`fas fa-cog ${
+                    Cookies.get("xray") || Cookies.get("jiraOpenAi") ? "green-icon" : ""
+                  }`}
+                ></i>
               </Nav.Link>
-              <OverlayTrigger
-                placement="top"
-                overlay={
-                  <Tooltip id="tooltip-settings">{getTooltipMessage()}</Tooltip>
-                }
-              >
-                <Nav.Link href="/settings">
-                  <i
-                    className={`fas fa-cog ${
-                      Cookies.get("xray") || Cookies.get("jiraOpenAi")
-                        ? "green-icon"
-                        : ""
-                    }`}
-                  ></i>
-                </Nav.Link>
-              </OverlayTrigger>
-            </Nav>
-          </Navbar>
-        </div>
-      </div>
+            </OverlayTrigger>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
 
       {/* Main content area */}
       <div className="main-content">{children}</div>

@@ -1,0 +1,28 @@
+version: '3'
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.backend
+    ports:
+      - "5006:5006"
+    volumes:
+      - ./backend:/app
+    environment:
+      - JIRA_ENDPOINT=https://literadev.atlassian.net/
+      - API_TYPE=azure
+      - API_VERSION=2024-02-15-preview
+      - API_BASE=https://litera-drafting-openai-dev.openai.azure.com/
+      - API_MODEL=Nebula-gpt-4
+      - SECRET_KEY=Ii4FOxWMbssyVO6CDPvemolPNCZJGshM
+      
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "3006:3006"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend

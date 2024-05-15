@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, make_response
-from backend.get_test_cases import JiraService
-from backend.import_tests import XrayImport
-from backend.add_fields import AddFields
+from get_test_cases import JiraService
+from import_tests import XrayImport
+from add_fields import AddFields
 import jwt, json, os
 import datetime
 from jwt.exceptions import ExpiredSignatureError, InvalidTokenError

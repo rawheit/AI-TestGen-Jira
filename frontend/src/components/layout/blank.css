@@ -24,6 +24,19 @@
   color: rgb(0, 206, 0);
 }
 
-.logo {
-  width: 150px;
+.custom-navbar {
+  display: flex;
+  align-items: center; /* Centers the logo vertically */
+  justify-content: space-between; /* Helps space out logo and nav items */
+}
+
+.navbar-logo {
+  height: auto;
+  max-height: 90px; /* Adjust based on your preference */
+  width: auto;
+  margin-right: 10px; /* Optional, adds some space between the logo and the nav links */
+}
+
+.navbar-collapse {
+  justify-content: center; /* Center nav-items horizontally */
 }

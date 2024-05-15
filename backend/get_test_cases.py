@@ -7,7 +7,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-from backend.openai_service import OpenAIService
+from openai_service import OpenAIService
 
 class JiraService :
 
@@ -30,7 +30,7 @@ class JiraService :
                 'key': singleIssue.key,
                 'summary': singleIssue.fields.summary,
                 'description': singleIssue.fields.description,
-                'workflow': singleIssue.fields.description,
+                'workflow': singleIssue.fields.customfield_10059,
                 'ac': singleIssue.fields.customfield_10060
             }
 
@@ -88,8 +88,5 @@ class JiraService :
                 base_prompt = base_prompt.replace('{{' + key + '}}', story_data[key])
 
             result = OpenAIService(self.openai_api_key).get_completion(system_prompt, user_prompt + '\n' + base_prompt)
-
-            # with open("result.json", "w") as f:
-            #         f.write(result)
 
             return result

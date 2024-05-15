@@ -1,5 +1,5 @@
 import React from 'react';
-import TestCasesAccordion from './testcasesaccordian'; 
+import TestCasesAccordion from './testcasesaccordian';
 
 const TestCasesAccordionWrapper: React.FC = () => {
   const storedTestCases = localStorage.getItem("testcases");
@@ -22,7 +22,7 @@ const TestCasesAccordionWrapper: React.FC = () => {
   }
 
   return (
-      <TestCasesAccordion testCases={parsedJSON || []} />
+    <TestCasesAccordion testCases={parsedJSON || []} />
   );
 };
 
