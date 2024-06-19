@@ -42,13 +42,13 @@ const Home: React.FC<Props> = () => {
           "issue_id": [formData.jira_issue_id]
         }, {
         headers: {
-          'Authorization': `Bearer ${Cookies.get("jiraOpenAi")}`
+          'Authorization': `Bearer ${Cookies.get("jira")}`
         }
       }
       );
-      // setResponse(response.data); // Update response state (optional)
-      console.log("Success! Response:", response.data); // Log response for debugging
-      localStorage.setItem('testcases', JSON.stringify(response.data, null, 2));
+
+      console.log("Success! Response:", response.data); 
+      localStorage.setItem('testcases', response.data as string);
       localStorage.setItem('jira_issue_id', formData.jira_issue_id);
 
       navigate('/testcases');

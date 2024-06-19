@@ -6,15 +6,39 @@ import jwt, json, os
 import datetime
 from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
 from flask_cors import CORS
+
+import logging
+from logging.handlers import RotatingFileHandler
+
 app = Flask(__name__)
 CORS(app)
 # app.config['DEBUG'] = True
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
+# Setup logging
+if not app.debug:
+    handler = RotatingFileHandler('app.log', maxBytes=10000, backupCount=1)
+    handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
+    ))
+    app.logger.addHandler(handler)
+    app.logger.setLevel(logging.INFO)
+
 @app.route("/")
 def hello_world():
     return "<p>Hello, World!</p>"
+
+@app.route("/test", methods=['POST'])
+def test():
+    try:
+        # Assuming JSON input...
+        data = request.get_json()
+        # Your logic here...
+        return jsonify(data), 200
+    except Exception as e:
+        app.logger.error(f'Error: {str(e)}')
+        return jsonify({'error': 'Internal Server Error'}), 500
 
 @app.route('/post_example', methods=['POST'])
 def post_example():
@@ -29,8 +53,6 @@ def post_example():
     return jsonify(response), 200  # Return a JSON response with a 200 status code
 
 
-# Header > JWT Auth Token with Jira Token, Email and OpenAI API Key
-# Payload > Give Jira Issue Id which is to be used to generate test cases
 @app.route("/get_test_cases", methods=["POST"])
 def get_test_cases():
     auth_header = request.headers.get("Authorization")
@@ -47,7 +69,6 @@ def get_test_cases():
 
     print(f"Header Received: {payload}")
 
-    api_key = payload["api_key"]
     jira_email = payload["email"]
     jira_token = payload["token"]
 
@@ -57,7 +78,7 @@ def get_test_cases():
     system_prompt = data.get("system_prompt", "")
     user_prompt = data.get("user_prompt", "As a quality engineer, I need to create XRay test cases for a desktop application named Litera Secure Share.")
     
-    response = JiraService(jira_email, jira_token, api_key).start_generating(jira_issue_id, system_prompt, user_prompt)
+    response = JiraService(jira_email, jira_token).start_generating(jira_issue_id, system_prompt, user_prompt)
     return jsonify(response), 200
 
 @app.route("/post_test_cases", methods=["POST"])
@@ -71,14 +92,17 @@ def post_test_cases():
 
     data = request.get_json()
 
-    testcase_json = json.loads(json.loads(data.get('testcase_data')))
+    testcase_json = json.loads(data.get('testcase_data'))
     xray_set = data.get('xray_test_sets')
     jira_issue_id = data.get('jira_issue_id')
 
-    formatted_data = XrayImport().format_test_cases(testcase_json, jira_issue_id, xray_set)
-    job_id = XrayImport().post_test_cases(token, formatted_data)
-    keys = XrayImport().get_job_keys(token, job_id)
-    return jsonify(keys), 200
+    try:
+        formatted_data = XrayImport().format_test_cases(testcase_json, jira_issue_id, xray_set)
+        job_id = XrayImport().post_test_cases(token, formatted_data)
+        keys = XrayImport().get_job_keys(token, job_id)
+        return jsonify(keys), 200
+    except Exception as e:
+        return make_response(jsonify({"error": "XRay Authentication Failed!"}), 401)
 
 @app.route("/add_fields", methods=["POST"])
 def add_fields():
@@ -110,27 +134,31 @@ def add_fields():
     return jsonify(response), 200
 
 @app.route("/authenticate", methods=["POST"])
-def authenticateJiraOpenAI():
+def authenticateJira():
     
     data = request.json
 
     jira_email = data["jira_email"]
     jira_token = data["jira_token"]
-    openai_key = data["openai_api_key"]
+    
+    try:
+        displayName = JiraService(jira_email, jira_token).jira_auth()
+        print(displayName)
+    except Exception as e:
+        return make_response(jsonify({"error": "Internal Server Error", "message": str(e)}), 500)
     
     def create_jwt(user_data):
-        expiration_time = datetime.datetime.utcnow() + datetime.timedelta(days=3)  # Expires in one day
+        expiration_time = datetime.datetime.utcnow() + datetime.timedelta(days=7)
         token = jwt.encode(user_data, SECRET_KEY, algorithm='HS256')
         return token
 
     user_credentials = {
         'email': jira_email,
         'token': jira_token,
-        'api_key': openai_key
     }
 
     my_jwt = create_jwt(user_credentials)
-    response = {'message': 'Successfully created JWT', 'jwt': my_jwt}
+    response = {'message': 'Successfully created JWT', 'jwt': my_jwt, 'user': displayName}
     return jsonify(response), 200
 
 @app.route("/authenticate-xray", methods=["POST"])
@@ -161,3 +189,6 @@ def authenticate_xray():
     except Exception as e:
         print(f"An exception occurred: {e}")
         return make_response(jsonify({"error": "Internal Server Error", "message": str(e)}), 500)
+    
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5006, debug=True, use_reloader=False)

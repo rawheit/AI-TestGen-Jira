@@ -23,7 +23,7 @@ const XRayFields: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!Cookies.get("jiraOpenAi")) {
+    if (!Cookies.get("jira")) {
       console.error("OpenAI or Jira Data is not present!");
       return; // Exit early if the cookie is not present
     }
@@ -35,7 +35,7 @@ const XRayFields: React.FC = () => {
       return axios.post(
         "/add_fields",
         { key, label: formData.label, component: formData.component },
-        { headers: { Authorization: `Bearer ${Cookies.get("jiraOpenAi")}` } }
+        { headers: { Authorization: `Bearer ${Cookies.get("jira")}` } }
       );
     });
 

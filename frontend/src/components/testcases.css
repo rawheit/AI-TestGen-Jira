@@ -23,15 +23,6 @@
   margin-bottom: 10px; /* Adds space below the input */
 }
 
-.delete-icon {
-  position: absolute;
-  right: 50px;
-}
-
-.deleted-header {
-  text-decoration: line-through;
-  color: red !important;
-}
-.accordion-button:not(.collapsed) {
-  cursor: text !important;
+.fa-arrow-left {
+  cursor: pointer;
 }

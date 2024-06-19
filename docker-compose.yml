@@ -9,20 +9,26 @@ services:
     volumes:
       - ./backend:/app
     environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=development
+      - NODE_ENV=development
       - JIRA_ENDPOINT=https://literadev.atlassian.net/
       - API_TYPE=azure
       - API_VERSION=2024-02-15-preview
       - API_BASE=https://litera-drafting-openai-dev.openai.azure.com/
       - API_MODEL=Nebula-gpt-4
+      - API_KEY=5639aa857ad14f13b7584ad94866137c
       - SECRET_KEY=Ii4FOxWMbssyVO6CDPvemolPNCZJGshM
-      
+    restart: always
+
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile.frontend
     ports:
-      - "3006:3006"
+      - "3000:3000"
     volumes:
       - ./frontend:/app
+
     depends_on:
       - backend

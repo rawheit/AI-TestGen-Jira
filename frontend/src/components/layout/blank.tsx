@@ -8,13 +8,13 @@ interface BlankLayoutProps {
 }
 const getTooltipMessage = () => {
   const xrayExists = Cookies.get("xray");
-  const jiraOpenAiExists = Cookies.get("jiraOpenAi");
+  const jiraExists = Cookies.get("jira");
 
-  if (xrayExists && jiraOpenAiExists) {
+  if (xrayExists && jiraExists) {
     return "All Authenticated";
   } else if (xrayExists) {
-    return "Jira & OpenAI data unavailable";
-  } else if (jiraOpenAiExists) {
+    return "Jira unauthorized";
+  } else if (jiraExists) {
     return "XRay unauthorized";
   } else {
     return "No authentication yet";
@@ -44,7 +44,7 @@ const BlankLayout: React.FC<BlankLayoutProps> = ({ children }) => {
               <Nav.Link href="/settings">
                 <i
                   className={`fas fa-cog ${
-                    Cookies.get("xray") || Cookies.get("jiraOpenAi") ? "green-icon" : ""
+                    Cookies.get("xray") && Cookies.get("jira") ? "green-icon" : ""
                   }`}
                 ></i>
               </Nav.Link>

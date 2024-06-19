@@ -1,5 +1,5 @@
 import React from 'react';
-import TestCasesAccordion from './testcasesaccordian';
+import TestCasesAccordion from './testcasesaccordian'; 
 
 const TestCasesAccordionWrapper: React.FC = () => {
   const storedTestCases = localStorage.getItem("testcases");
@@ -8,7 +8,7 @@ const TestCasesAccordionWrapper: React.FC = () => {
   // Check if 'testcases' is not null and is a valid JSON string
   if (storedTestCases) {
     try {
-      parsedJSON = JSON.parse(JSON.parse(storedTestCases));
+      parsedJSON = JSON.parse(storedTestCases);
     } catch (error) {
       console.error("Parsing error:", error);
       parsedJSON = []; // Default to an empty array in case of error
@@ -22,7 +22,7 @@ const TestCasesAccordionWrapper: React.FC = () => {
   }
 
   return (
-    <TestCasesAccordion testCases={parsedJSON || []} />
+      <TestCasesAccordion testCases={parsedJSON || []} />
   );
 };
 

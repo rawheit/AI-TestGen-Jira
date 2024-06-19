@@ -3,10 +3,11 @@ import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import axios from "../axios";
 import Cookies from "js-cookie";
-import "./testcases.css";
 import TestCasesAccordionWrapper from './testcasesaccordianwrapper'
 import ClipLoader from "react-spinners/ClipLoader";
 import { useNavigate } from 'react-router-dom';
+import "./testcases.css";
+
 interface TestCasesProps { }
 
 const TestCases: React.FC<TestCasesProps> = () => {
@@ -37,7 +38,7 @@ const TestCases: React.FC<TestCasesProps> = () => {
         "/post_test_cases",
         {
           "xray_test_sets": inputValue,
-          "testcase_data": localStorage.getItem("testcases"),
+          "testcase_data": localStorage.getItem("uptc"),
           "jira_issue_id": localStorage.getItem("jira_issue_id")
         },
         { headers: { Authorization: `Bearer ${Cookies.get("xray")}` } }
@@ -46,7 +47,7 @@ const TestCases: React.FC<TestCasesProps> = () => {
       localStorage.setItem("xray_test_keys", response.data)
       navigate('/add-fields');
     } catch (error) {
-      console.error("Operation failed:", error);
+      console.error("Authentication for XRay Failed, please retry authenticating");
     } finally {
       setIsSubmitting(false);
       setInputMode("");
@@ -56,7 +57,7 @@ const TestCases: React.FC<TestCasesProps> = () => {
 
   const handleRegenerate = async () => {
     let formData
-    if (userPrompt == "") {
+    if (userPrompt === "") {
       formData = { "issue_id": [localStorage.getItem("jira_issue_id")] }
     } else {
       formData = { user_prompt: userPrompt, "issue_id": [localStorage.getItem("jira_issue_id")] }
@@ -69,12 +70,12 @@ const TestCases: React.FC<TestCasesProps> = () => {
         formData, // Using the last user prompt if available
         {
           headers: {
-            Authorization: `Bearer ${Cookies.get("jiraOpenAi")}`
+            Authorization: `Bearer ${Cookies.get("jira")}`
           }
         }
       );
       console.log("Regenerated successfully:", response.data);
-      localStorage.setItem('testcases', JSON.stringify(response.data, null, 2));
+      localStorage.setItem('uptc', response.data);
       setUserPrompt(""); // Clear input after use
     } catch (error) {
       console.error("Regeneration failed:", error);

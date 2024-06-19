@@ -11,11 +11,17 @@ from openai_service import OpenAIService
 
 class JiraService :
 
-    def __init__(self, jira_email, jira_token, api_key):
+    def __init__(self, jira_email, jira_token):
         self.server = os.getenv('JIRA_ENDPOINT')
         self.email = jira_email
         self.token = jira_token
-        self.openai_api_key = api_key
+        self.openai_api_key = os.getenv('API_KEY')
+        
+    def jira_auth(self):
+        jiraOptions = {'server': self.server}
+        jira = JIRA(options=jiraOptions, basic_auth=(self.email, self.token))
+        user = jira.myself()
+        return user['displayName']
 
     def start_generating(self, user_story_list, system_prompt, user_prompt):
         jiraOptions = {'server': self.server}
